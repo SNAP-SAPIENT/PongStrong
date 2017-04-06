@@ -1,0 +1,19 @@
+{
+  "name": "pong-strong",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron app.js",
+    "rebuild": "electron-rebuild -f -w serialport"
+  },
+  "author": "Peter Gyory",
+  "license": "IDK",
+  "dependencies": {
+    "electron": "^1.6.2",
+    "serialport": "^4.0.7"
+  },
+  "devDependencies": {
+    "electron-rebuild": "^1.5.7"
+  }
+}

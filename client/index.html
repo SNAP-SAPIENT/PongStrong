@@ -6,9 +6,24 @@
 
     <title>Activity Monitor</title>
     <script src="./src/index.js"></script>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+      .is-hidden {
+        display: none;
+      }
+    </style>
+
 
   </head>
   <body>
+    <div id="image_assets">
+      <img id="UFO_asset" class="is-hidden" src="./assets/UFO.png" alt="UFO">
+      <img id="Brick_asset" class="is-hidden" src="./assets/Brick.png" alt="Brick">
+      <img id="Alien_asset" class="is-hidden" src="./assets/Alien.png" alt="Alien">
+    </div>
 
     <div class="container-fluid">
       <canvas id="screen"></canvas>

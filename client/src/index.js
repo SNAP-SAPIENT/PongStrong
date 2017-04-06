@@ -1,10 +1,8 @@
-window.onload = function () {
-  var c=document.querySelector('#screen');
-  var ctx=c.getContext('2d');
-  ctx.beginPath();
-  ctx.arc(100,75,50,0,2*Math.PI);
-  ctx.stroke();
+var path = require("path");
+var SpriteLoader = require('./src/SpriteLoader');
+var Game = require('./src/Game');
 
+window.onload = function () {
   var SerialPort = require('serialport');
   SerialPort.list(function(err, ports) {
     console.log(ports);
@@ -17,4 +15,13 @@ window.onload = function () {
   port.on('data', function (stuff) {
     console.log(stuff);
   });
+
+  var sprites = SpriteLoader();
+
+  var canvas = document.querySelector('#screen');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  var ctx = canvas.getContext('2d');
+
+  Game(ctx, sprites)();
 }

@@ -22,7 +22,10 @@ electron.app.once('ready', function () {
     backgroundColor: "#fff",
     // Don't show the window until it ready, this prevents any white flickering
     show: false
-  })
+  });
+
+  window.maximize();
+  window.setFullScreen(true);
 
   // Load a URL in the window to the local index.html path
   window.loadURL(url.format({

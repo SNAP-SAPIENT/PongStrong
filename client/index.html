@@ -11,8 +11,76 @@
         padding: 0;
         margin: 0;
       }
+
+      @font-face {
+        font-family: wide7;
+        src: url(assets/fonts/wide_pixel_7/wide_pixel-7.ttf);
+      }
+      @font-face {
+        font-family: mechanical;
+        src: url(assets/fonts/Mechanical/Mechanical.otf);
+      }
+
       .is-hidden {
         display: none;
+      }
+
+      .is-visible {
+        display: block;
+
+      }
+
+      .copyright-text {
+        font-family: wide7;
+        font-size: 22px;
+        letter-spacing: 0.07em;
+        color: #10FF00;
+        position: absolute;
+        top: 580px;
+        left: 409px;
+      }
+
+      .start-screen-sub {
+        font-family: wide7;
+        font-size: 38px;
+        letter-spacing: 0.07em;
+        color: #ffffff;
+        position: absolute;
+        top: 640px;
+        width: 100%;
+        text-align: center;
+      }
+
+      .labels-row {
+        position: absolute;
+        top: 45px;
+        color: #ffffff;
+        margin-left: 520px;
+        width: 100%;
+      }
+      .in-game-label {
+        font-family: mechanical;
+        font-size: 30px;
+        margin-right: 161px;
+      }
+
+      .numbers-row {
+        position: absolute;
+        top: 75px;
+        color: #ffffff;
+        margin-left: 520px;
+        width: 100%;
+      }
+      .in-game-number {
+        font-family: mechanical;
+        font-size: 40px;
+        margin-right: 153px;
+      }
+      .in-game-logo {
+        position: absolute;
+        width: 230px;
+        top: 20px;
+        left: 238px;
       }
     </style>
 
@@ -23,9 +91,27 @@
       <img id="UFO_asset" class="is-hidden" src="./assets/UFO.png" alt="UFO">
       <img id="Brick_asset" class="is-hidden" src="./assets/Brick.png" alt="Brick">
       <img id="Alien_asset" class="is-hidden" src="./assets/Alien.png" alt="Alien">
+      <img id="Logo_asset" class="is-hidden" src="./assets/Logo.png" alt="Logo">
     </div>
 
-    <div class="container-fluid">
+    <div id="start_ui" class="is-visible">
+      <span class="copyright-text">COPYRIGHT 2017 - SAPIENTRAZORFISH</span>
+      <span class="start-screen-sub">TEST YOUR PONG STRENGTH</span>
+    </div>
+
+    <div id="game_ui" class="is-hidden">
+      <img class="in-game-logo" src="./assets/PongStrong.jpg">
+      <div class="labels-row">
+        <span class="in-game-label">TIME:</span>
+        <span class="in-game-label">SCORE:</span>
+      </div>
+      <div class="numbers-row">
+        <span id="time" class="in-game-number">0:00</span>
+        <span class="in-game-number"><span id="score">0000</span> <span class="in-game-label">pts</span></span>
+      </div>
+    </div>
+
+    <div>
       <canvas id="screen"></canvas>
     </div>
 

@@ -74,17 +74,10 @@ module.exports = function LoadSprites() {
               y: 448,
             },
             {
-              x: 224,
-              y: 448,
-            },
-            {
               x: 448,
               y: 448,
             },
-            {
-              x: 448,
-              y: 448,
-            },
+
           ],
         },
       },

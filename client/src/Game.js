@@ -6,12 +6,17 @@ function createBasicBrick() {
   return { type: 'BRICK', frame: 0, frameTime: 0, state: 'idle', deathFrame: 8, points: 10 };
 }
 
-var STATES = { START: 'START', INTRO: 'INTRO', MAIN: 'MAIN', END: 'END' };
+function createSpaceShip() {
+  return { type: 'SHIP', frame: 0, frameTime: 0, state: 'idle', deathFrame: 7, points: 1000, currentTile: 0, isActive: false, moveTimer: 2000 };
+}
+
+var STATES = { START: 'START', INTRO: 'INTRO', MAIN: 'MAIN', END: 'END', SCORES: 'SCORES' };
 
 module.exports = function Game(ctx, sprites) {
   var gameState = STATES.START;
   var previousTime = Date.now();
-  var CELL_SIZE = 256;// 224;
+  var CELL_SIZE = 256;
+  var countDown = 60 * 1000 * 3; // 3 min
   var score = 0;
   var gridX = window.innerWidth / 2 - CELL_SIZE * 4 / 2;
   var gridY = 128;
@@ -21,6 +26,15 @@ module.exports = function Game(ctx, sprites) {
     [0, CELL_SIZE * 2], [CELL_SIZE, CELL_SIZE * 2], [CELL_SIZE * 2, CELL_SIZE * 2], [CELL_SIZE * 3, CELL_SIZE * 2],
   ];
   var gridMap = [[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11]];
+  var gameOverTimer = 5000;
+  var scoreScreenTimer = 10000;
+  var spaceShipTimer = 60000;
+  var spaceShip = { type: 'SHIP', frame: 0, frameTime: 0, state: 'idle', deathFrame: 7, points: 1000, currentTile: 0, isActive: false };
+
+  var mainScreenAnimations = [
+    { type: 'ARM', frame: 0, frameTime: 0, x: 10, y: 150, reversed: false },
+    { type: 'ARM', frame: 0, frameTime: 0, x: 1425, y: 150, reversed: true },
+  ];
 
   var score = 0;
   var grid = gridCoords.map((coords) => {
@@ -30,6 +44,34 @@ module.exports = function Game(ctx, sprites) {
       entity: createBasicBrick(),
     }
   });
+
+  function resetGame() {
+    grid = gridCoords.map((coords) => {
+      return {
+        x: coords[0],
+        y: coords[1],
+        entity: createBasicBrick(),
+      }
+    });
+    score = 0;
+    countDown = 60 * 1000 * 3;
+    gameOverTimer = 5000;
+    scoreScreenTimer = 20000;
+    gameState = STATES.START;
+    document.querySelector('#start_ui').className = 'is-visible';
+    document.querySelector('#game_ui').className = 'is-hidden';
+    document.querySelector('#game_over_ui').className = 'is-hidden';
+  }
+
+  function displayTime() {
+    var timeDiv = document.querySelector('#time');
+    var timeString = '';
+    timeString += Math.floor(countDown / 60000);
+    timeString += ':';
+    var seconds = Math.floor(countDown / 1000) % 60;
+    timeString += seconds < 10 ? '0' + seconds : seconds;
+    timeDiv.innerHTML = timeString;
+  }
 
   function displayScore() {
     var scoreDiv = document.querySelector('#score');
@@ -46,13 +88,13 @@ module.exports = function Game(ctx, sprites) {
       }
     }
     scoreString += score;
-    console.log(score);
     scoreDiv.innerHTML = scoreString;
   }
 
   function updateAndDraw(dt) {
-    return function(gridSpace) {
-      var entity = gridSpace.entity;
+    return function(gridSpace, i) {
+      var isSpaceShip = (spaceShip.isActive && i === spaceShip.currentTile);
+      var entity = isSpaceShip ? spaceShip : gridSpace.entity;
       if (!entity) return gridSpace;
 
       var sprite = sprites[entity.type];
@@ -68,6 +110,8 @@ module.exports = function Game(ctx, sprites) {
           score += entity.points;
           if (entity.type === 'BRICK') {
             gridSpace.entity = createBasicAlien();
+          } else if (entity.type === 'SHIP') {
+            spaceShip = createSpaceShip();
           } else {
             gridSpace.entity = null;
           }
@@ -87,18 +131,73 @@ module.exports = function Game(ctx, sprites) {
     }
   }
 
+  function drawIntroElement(dt) {
+    return function(entity) {
+      var sprite = sprites[entity.type];
+      var animation = sprite.animations['idle'];
+      entity.frameTime += dt;
+
+      if (entity.frameTime >= animation.rate) {
+        entity.frameTime = 0;
+        var newFrame = entity.frame + 1;
+        entity.frame = newFrame;
+
+        if (newFrame >= animation.frames.length) {
+          entity.frame = 0;
+        }
+      }
+
+      var frame = animation.frames[entity.frame];
+      if (!entity.reversed) {
+        ctx.drawImage(sprite.img, frame.x, frame.y, sprite.w, sprite.h, entity.x, entity.y, 384, 384);
+      } else {
+        ctx.save();
+        ctx.translate(entity.x, entity.y);
+        ctx.scale(-1,1);
+        ctx.drawImage(sprite.img, frame.x, frame.y, sprite.w, sprite.h, 0, 0, 384, 384);
+        ctx.restore();
+      }
+
+      return entity;
+    }
+  }
+
   var stateUpdates = {
-    START: function() {
+    START: function(dt) {
       var logoImg = document.querySelector('#Logo_asset');
       var logoWidth = 1300;
       ctx.drawImage(logoImg, window.innerWidth / 2 - logoWidth / 2, 0, logoWidth, logoWidth * 0.511);
+      // Draw arms
+      mainScreenAnimations.map(drawIntroElement(dt));
+    },
+    INTRO: function() {
+
     },
     MAIN: function(dt) {
       grid.map(updateAndDraw(dt));
+      countDown -= dt;
+
+      if (countDown <= 0) {
+        gameState = STATES.END;
+        document.querySelector('#game_ui').className = 'is-hidden';
+        document.querySelector('#game_over_ui').className = 'is-visible';
+      }
+
       displayScore();
+      displayTime(dt);
+    },
+    END: function(dt) {
+      gameOverTimer -= dt;
+      if (gameOverTimer <= 0) {
+        resetGame();
+      }
+    },
+    SCORES: function() {
+
     },
   }
 
+  // switch this to listen to serial ports
   document.querySelector('#screen').addEventListener('click', (e) => {
     var x = e.pageX;
     var y = e.pageY;

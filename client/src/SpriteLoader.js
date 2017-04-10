@@ -1,5 +1,65 @@
 module.exports = function LoadSprites() {
   return {
+    ARM: {
+      img: document.querySelector('#Arm_asset'),
+      w: 758,
+      h: 758,
+      animations: {
+        idle: {
+          rate: 200,
+          frames: [
+            {
+              x: 0,
+              y: 0,
+            },
+            {
+              x: 768,
+              y: 0,
+            },
+            {
+              x: 1536,
+              y: 0,
+            },
+            {
+              x: 0,
+              y: 768,
+            },
+            {
+              x: 768,
+              y: 768,
+            },
+            {
+              x: 1536,
+              y: 768,
+            },
+            {
+              x: 0,
+              y: 1536,
+            },
+            {
+              x: 768,
+              y: 1536,
+            },
+            {
+              x: 1536,
+              y: 1536,
+            },
+            {
+              x: 0,
+              y: 2304,
+            },
+            {
+              x: 768,
+              y: 2304,
+            },
+            {
+              x: 1536,
+              y: 2304,
+            },
+          ],
+        },
+      },
+    },
     UFO: {
       img: document.querySelector('#UFO_asset'),
       w: 128,

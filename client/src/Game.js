@@ -6,8 +6,8 @@ function createBasicBrick() {
   return { type: 'BRICK', frame: 0, frameTime: 0, state: 'idle', deathFrame: 8, points: 10 };
 }
 
-function createSpaceShip() {
-  return { type: 'SHIP', frame: 0, frameTime: 0, state: 'idle', deathFrame: 7, points: 1000, currentTile: 0, isActive: false, moveTimer: 2000 };
+function createUFO() {
+  return { type: 'UFO', frame: 0, frameTime: 0, state: 'idle', deathFrame: 8, points: 1000, currentTile: 0, isActive: false, moveTimer: 1500, spawnTimer: 30000 };
 }
 
 var STATES = { START: 'START', INTRO: 'INTRO', MAIN: 'MAIN', END: 'END', SCORES: 'SCORES' };
@@ -28,8 +28,7 @@ module.exports = function Game(ctx, sprites) {
   var gridMap = [[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11]];
   var gameOverTimer = 5000;
   var scoreScreenTimer = 10000;
-  var spaceShipTimer = 60000;
-  var spaceShip = { type: 'SHIP', frame: 0, frameTime: 0, state: 'idle', deathFrame: 7, points: 1000, currentTile: 0, isActive: false };
+  var ufo = createUFO();
 
   var mainScreenAnimations = [
     { type: 'ARM', frame: 0, frameTime: 0, x: 10, y: 150, reversed: false },
@@ -80,8 +79,10 @@ module.exports = function Game(ctx, sprites) {
     var scoreString = '';
     if (score < 1000) {
       scoreString += '0';
+
       if (score < 100) {
         scoreString += '0';
+
         if (score < 10) {
           scoreString += '0';
         }
@@ -91,10 +92,31 @@ module.exports = function Game(ctx, sprites) {
     scoreDiv.innerHTML = scoreString;
   }
 
+  function updateShip(dt) {
+    if (ufo.isActive) {
+      ufo.moveTimer -= dt;
+
+      if (ufo.moveTimer <= 0 && ufo.state !== 'death') {
+        ufo.moveTimer = 1500;
+        ufo.currentTile += 1;
+
+        if (ufo.currentTile >= grid.length) {
+          ufo = createUFO();
+        }
+      }
+    } else {
+      ufo.spawnTimer -= dt;
+
+      if (ufo.spawnTimer <= 0) {
+        ufo.isActive = true;
+      }
+    }
+  }
+
   function updateAndDraw(dt) {
     return function(gridSpace, i) {
-      var isSpaceShip = (spaceShip.isActive && i === spaceShip.currentTile);
-      var entity = isSpaceShip ? spaceShip : gridSpace.entity;
+      var isUFO = (ufo.isActive && i === ufo.currentTile);
+      var entity = isUFO ? ufo : gridSpace.entity;
       if (!entity) return gridSpace;
 
       var sprite = sprites[entity.type];
@@ -110,13 +132,13 @@ module.exports = function Game(ctx, sprites) {
           score += entity.points;
           if (entity.type === 'BRICK') {
             gridSpace.entity = createBasicAlien();
-          } else if (entity.type === 'SHIP') {
-            spaceShip = createSpaceShip();
+          } else if (entity.type === 'UFO') {
+            ufo = createUFO();
           } else {
             gridSpace.entity = null;
           }
 
-          return gridSpace;
+          return;
         }
 
         if (newFrame >= animation.frames.length) {
@@ -125,9 +147,7 @@ module.exports = function Game(ctx, sprites) {
       }
 
       var frame = animation.frames[entity.frame];
-      ctx.drawImage(sprite.img, frame.x, frame.y, sprite.w, sprite.h, gridSpace.x + gridX, gridSpace.y + gridY, 256, 256);// sprite.w, sprite.h);
-
-      return gridSpace;
+      ctx.drawImage(animation.img, frame.x, frame.y, sprite.w, sprite.h, gridSpace.x + gridX, gridSpace.y + gridY, 256, 256); // sprite.w, sprite.h);
     }
   }
 
@@ -149,12 +169,12 @@ module.exports = function Game(ctx, sprites) {
 
       var frame = animation.frames[entity.frame];
       if (!entity.reversed) {
-        ctx.drawImage(sprite.img, frame.x, frame.y, sprite.w, sprite.h, entity.x, entity.y, 384, 384);
+        ctx.drawImage(animation.img, frame.x, frame.y, sprite.w, sprite.h, entity.x, entity.y, 384, 384);
       } else {
         ctx.save();
         ctx.translate(entity.x, entity.y);
         ctx.scale(-1,1);
-        ctx.drawImage(sprite.img, frame.x, frame.y, sprite.w, sprite.h, 0, 0, 384, 384);
+        ctx.drawImage(animation.img, frame.x, frame.y, sprite.w, sprite.h, 0, 0, 384, 384);
         ctx.restore();
       }
 
@@ -167,6 +187,7 @@ module.exports = function Game(ctx, sprites) {
       var logoImg = document.querySelector('#Logo_asset');
       var logoWidth = 1300;
       ctx.drawImage(logoImg, window.innerWidth / 2 - logoWidth / 2, 0, logoWidth, logoWidth * 0.511);
+
       // Draw arms
       mainScreenAnimations.map(drawIntroElement(dt));
     },
@@ -174,7 +195,8 @@ module.exports = function Game(ctx, sprites) {
 
     },
     MAIN: function(dt) {
-      grid.map(updateAndDraw(dt));
+      updateShip(dt);
+      grid.forEach(updateAndDraw(dt));
       countDown -= dt;
 
       if (countDown <= 0) {
@@ -208,7 +230,13 @@ module.exports = function Game(ctx, sprites) {
         var row = Math.floor((y - gridY) / CELL_SIZE);
 
         var cellId = gridMap[row][col];
-        if (grid[cellId].entity) grid[cellId].entity.state = 'death';
+        if (ufo.isActive && cellId === ufo.currentTile) {
+          ufo.state = 'death';
+          ufo.frameTime = 0;
+        } else if (grid[cellId].entity) {
+          grid[cellId].entity.state = 'death';
+          grid[cellId].entity.frameTime = 0;
+        }
       }
     } else if (gameState === STATES.START) {
       gameState = STATES.MAIN;

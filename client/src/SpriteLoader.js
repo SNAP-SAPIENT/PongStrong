@@ -1,11 +1,11 @@
 module.exports = function LoadSprites() {
   return {
     ARM: {
-      img: document.querySelector('#Arm_asset'),
       w: 758,
       h: 758,
       animations: {
         idle: {
+          img: document.querySelector('#Arm_asset'),
           rate: 200,
           frames: [
             {
@@ -61,39 +61,77 @@ module.exports = function LoadSprites() {
       },
     },
     UFO: {
-      img: document.querySelector('#UFO_asset'),
-      w: 128,
-      h: 128,
+      w: 224,
+      h: 224,
       animations: {
-        main: {
-          rate: 300,
+        idle: {
+          img: document.querySelector('#UFO_idle_asset'),
+          rate: 200,
           frames: [
             {
               x: 0,
               y: 0,
             },
             {
-              x: 128,
+              x: 224,
               y: 0,
             },
             {
               x: 0,
-              y: 128,
+              y: 224,
             },
             {
-              x: 128,
-              y: 128,
+              x: 224,
+              y: 224,
+            },
+          ],
+        },
+        death: {
+          img: document.querySelector('#UFO_death_asset'),
+          rate: 250,
+          frames: [
+            {
+              x: 0,
+              y: 0,
+            },
+            {
+              x: 224,
+              y: 0,
+            },
+            {
+              x: 448,
+              y: 0,
+            },
+            {
+              x: 0,
+              y: 224,
+            },
+            {
+              x: 224,
+              y: 224,
+            },
+            {
+              x: 448,
+              y: 224,
+            },
+            {
+              x: 0,
+              y: 448,
+            },
+            {
+              x: 224,
+              y: 448,
             },
           ],
         },
       },
     },
     ALIEN: {
-      img: document.querySelector('#Alien_asset'),
       w: 224,
       h: 224,
       animations: {
         idle: {
+          img: document.querySelector('#Alien_asset'),
           rate: 300,
           frames: [
             {
@@ -107,6 +145,7 @@ module.exports = function LoadSprites() {
           ],
         },
         death: {
+          img: document.querySelector('#Alien_asset'),
           rate: 200,
           frames: [
             {
@@ -143,11 +182,11 @@ module.exports = function LoadSprites() {
       },
     },
     BRICK: {
-      img: document.querySelector('#Brick_asset'),
       w: 224,
       h: 224,
       animations: {
         idle: {
+          img: document.querySelector('#Brick_asset'),
           rate: 300,
           frames: [
             {
@@ -157,6 +196,7 @@ module.exports = function LoadSprites() {
           ],
         },
         death: {
+          img: document.querySelector('#Brick_asset'),
           rate: 200,
           frames: [
             {

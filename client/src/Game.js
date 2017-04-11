@@ -57,6 +57,7 @@ module.exports = function Game(ctx, sprites) {
     gameOverTimer = 5000;
     scoreScreenTimer = 20000;
     gameState = STATES.START;
+    ufo = createUFO();
     document.querySelector('#start_ui').className = 'is-visible';
     document.querySelector('#game_ui').className = 'is-hidden';
     document.querySelector('#game_over_ui').className = 'is-hidden';

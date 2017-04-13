@@ -1,6 +1,6 @@
-const int inputPins[] = { 9, 10, 11 };
+const int inputPins[] = { 9, 10, 11, 12 };
 const int analogPins[] = { A0, A1, A2, A3, A4, A5 };
-const int inputCount = 1;
+const int inputCount = 4;
 int time = 0;
 
 // these variables will change:
@@ -26,14 +26,14 @@ void setup() {
 void setSensorTimes() {
   // read the sensor and store it in the variable sensorReading:
   for (int i = 0; i < inputCount; i++) {
-    // Serial.println(digitalRead(inputPins[i]));
     if (digitalRead(inputPins[i]) == HIGH && sensorTimes[i] == 0) {
+      Serial.print(i);
+      Serial.print(" : ");
       Serial.println(millis());
       if (isDetecting == false) {
         isDetecting = true;
         detectStart = millis();
       }
-      // sensorValues[i] = analogRead(analogPins[i]);
       sensorTimes[i] = micros();
     }
   }
@@ -69,13 +69,9 @@ void printSensorTimes() {
 //  Serial.println(sensorTimes[2] - sensorTimes[0]);
   // Serial.print(sensorTimes[0] - sensorTimes[1]); 
   Serial.println("");
-  Serial.println("");
 }
 
 bool shouldReset() {
-//  Serial.print(millis());
-//  Serial.print(" : ");
-//  Serial.println(detectStart);
   return (millis() - detectStart) > detectLimit;
 }
 

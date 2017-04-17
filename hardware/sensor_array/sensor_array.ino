@@ -1,6 +1,5 @@
-const int inputPins[] = { 9, 10, 11, 12 };
-const int analogPins[] = { A0, A1, A2, A3, A4, A5 };
-const int inputCount = 4;
+const int inputPins[] = { 9, 10, 11 };
+const int inputCount = 3;
 int time = 0;
 
 // these variables will change:
@@ -27,9 +26,9 @@ void setSensorTimes() {
   // read the sensor and store it in the variable sensorReading:
   for (int i = 0; i < inputCount; i++) {
     if (digitalRead(inputPins[i]) == HIGH && sensorTimes[i] == 0) {
-      Serial.print(i);
-      Serial.print(" : ");
-      Serial.println(millis());
+//      Serial.print(inputPins[i]);
+//      Serial.print(" : ");
+//      Serial.println(millis());
       if (isDetecting == false) {
         isDetecting = true;
         detectStart = millis();
@@ -41,33 +40,15 @@ void setSensorTimes() {
 
 void printSensorTimes() {
   alreadyPrinted = true;
-//  for (int i = 0; i < inputCount; i++) {
+  for (int i = 0; i < inputCount; i++) {
 //    Serial.print(inputPins[i]);
 //    Serial.print(" , ");
 //    Serial.print(sensorValues[i]);
-//    Serial.print(" , ");
-//    Serial.print(sensorTimes[i]);
-//    Serial.print("  _  ");
-//  }
-//
-//  Serial.print("9 : ");
-//  Serial.println(sensorTimes[0]);
-
-//  Serial.print("10 : ");
-//  Serial.println(sensorTimes[1]);
-//
-//  Serial.print("11 : ");
-//  Serial.println(sensorTimes[2]);
-  
-//  Serial.print("9 - 10  :  ");
-//  Serial.println(sensorTimes[0] - sensorTimes[1]);
-//  
-//  Serial.print("10 - 11  :  ");
-//  Serial.println(sensorTimes[1] - sensorTimes[2]);
-//  
-//  Serial.print("11 - 9  :  ");
-//  Serial.println(sensorTimes[2] - sensorTimes[0]);
-  // Serial.print(sensorTimes[0] - sensorTimes[1]); 
+    // Serial.print(" , ");
+    Serial.print(sensorTimes[i]);
+    Serial.print(",");
+    // Serial.print("  _  ");
+  }
   Serial.println("");
 }
 

@@ -1,13 +1,13 @@
 function createBasicAlien() {
-  return { type: 'ALIEN', frame: 0, frameTime: 0, state: 'idle', deathFrame: 7, points: 100 };
+  return { type: 'ALIEN', frame: 0, frameTime: 0, state: 'enter', enterFrame: 8, deathFrame: 34, points: 100 };
 }
 
 function createBasicBrick() {
-  return { type: 'BRICK', frame: 0, frameTime: 0, state: 'idle', deathFrame: 8, points: 10 };
+  return { type: 'BRICK', frame: 0, frameTime: 0, state: 'enter', enterFrame: 10, deathFrame: 23, points: 10 };
 }
 
 function createUFO() {
-  return { type: 'UFO', frame: 0, frameTime: 0, state: 'idle', deathFrame: 8, points: 1000, currentTile: 0, isActive: false, moveTimer: 1500, spawnTimer: 30000 };
+  return { type: 'UFO', frame: 0, frameTime: 0, state: 'idle', deathFrame: 27, points: 1000, currentTile: 0, isActive: false, moveTimer: 1500, spawnTimer: 3000 };
 }
 
 var STATES = { START: 'START', INTRO: 'INTRO', MAIN: 'MAIN', END: 'END', SCORES: 'SCORES' };
@@ -142,6 +142,12 @@ module.exports = function Game(ctx, sprites) {
           return;
         }
 
+        if (entity.state === 'enter' && newFrame === entity.enterFrame) {
+          entity.frame = 0;
+          entity.state = 'idle';
+          animation = sprite.animations[entity.state];
+        }
+
         if (newFrame >= animation.frames.length) {
           entity.frame = 0;
         }
@@ -170,10 +176,10 @@ module.exports = function Game(ctx, sprites) {
 
       var frame = animation.frames[entity.frame];
       if (!entity.reversed) {
-        ctx.drawImage(animation.img, frame.x, frame.y, sprite.w, sprite.h, entity.x, entity.y, 384, 384);
+        ctx.drawImage(animation.img, frame.x, frame.y, sprite.w, sprite.h, window.innerWidth/2 - 710, entity.y, 384, 384);
       } else {
         ctx.save();
-        ctx.translate(entity.x, entity.y);
+        ctx.translate(window.innerWidth/2 + 705, entity.y);
         ctx.scale(-1,1);
         ctx.drawImage(animation.img, frame.x, frame.y, sprite.w, sprite.h, 0, 0, 384, 384);
         ctx.restore();
@@ -231,12 +237,15 @@ module.exports = function Game(ctx, sprites) {
         var row = Math.floor((y - gridY) / CELL_SIZE);
 
         var cellId = gridMap[row][col];
-        if (ufo.isActive && cellId === ufo.currentTile) {
+        var entity = grid[cellId].entity;
+        if (ufo.isActive && cellId === ufo.currentTile && ufo.state !== 'death') {
           ufo.state = 'death';
+          ufo.frame = 0;
           ufo.frameTime = 0;
-        } else if (grid[cellId].entity) {
-          grid[cellId].entity.state = 'death';
-          grid[cellId].entity.frameTime = 0;
+        } else if (entity && entity.state === 'idle') {
+          entity.state = 'death';
+          entity.frame = 0;
+          entity.frameTime = 0;
         }
       }
     } else if (gameState === STATES.START) {

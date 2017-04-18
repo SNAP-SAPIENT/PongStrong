@@ -1,18 +1,64 @@
+var Soundtrack = new Audio(__dirname + '/../assets/Sounds/LoopingMusic.wav');
+Soundtrack.loop = true;
+var Soundtrack2 = new Audio(__dirname + '/../assets/Sounds/LoopingMusic2.wav');
+Soundtrack2.loop = true;
+Soundtrack2.volume = 0.3;
+var BallHitSound = new Audio(__dirname + '/../assets/Sounds/BallHit.wav');
+var Alien1DeathSound = new Audio(__dirname + '/../assets/Sounds/Brixplosion.wav');
+var Alien2DeathSound = new Audio(__dirname + '/../assets/Sounds/Alienplosion.wav');
+var UFODeathSound = new Audio(__dirname + '/../assets/Sounds/Saucerxplosion.wav');
+var UFOMoveSound = new Audio(__dirname + '/../assets/Sounds/SaucerFlying.wav');
+var UFOSpawnSound = new Audio(__dirname + '/../assets/Sounds/Spawn.wav');
+UFOSpawnSound.volume = 0.2;
+
 function createBasicAlien() {
-  return { type: 'ALIEN', frame: 0, frameTime: 0, state: 'enter', enterFrame: 8, deathFrame: 34, points: 100 };
+  return {
+    type: 'ALIEN',
+    frame: 0,
+    frameTime: 0,
+    state: 'enter',
+    enterFrame: 8,
+    deathFrame: 26,
+    points: 50,
+    deathSound: Alien2DeathSound,
+  };
 }
 
 function createBasicBrick() {
-  return { type: 'BRICK', frame: 0, frameTime: 0, state: 'enter', enterFrame: 10, deathFrame: 23, points: 10 };
+  return {
+    type: 'BRICK',
+    frame: 0,
+    frameTime: 0,
+    state: 'enter',
+    enterFrame: 10,
+    deathFrame: 23,
+    points: 10,
+    deathSound: Alien1DeathSound,
+  };
 }
 
 function createUFO() {
-  return { type: 'UFO', frame: 0, frameTime: 0, state: 'idle', deathFrame: 27, points: 1000, currentTile: 0, isActive: false, moveTimer: 1500, spawnTimer: 3000 };
+  return {
+    type: 'UFO',
+    frame: 0,
+    frameTime: 0,
+    state: 'idle',
+    deathFrame: 27,
+    points: 100,
+    currentTile: 0,
+    isActive: false,
+    moveTimer: 1500,
+    spawnTimer: 3000,
+    deathSound: UFODeathSound,
+  };
 }
 
 var STATES = { START: 'START', INTRO: 'INTRO', MAIN: 'MAIN', END: 'END', SCORES: 'SCORES' };
 
 module.exports = function Game(ctx, sprites) {
+  Soundtrack.play();
+  Soundtrack2.play();
+
   var gameState = STATES.START;
   var previousTime = Date.now();
   var CELL_SIZE = 256;
@@ -98,6 +144,8 @@ module.exports = function Game(ctx, sprites) {
       ufo.moveTimer -= dt;
 
       if (ufo.moveTimer <= 0 && ufo.state !== 'death') {
+        UFOMoveSound.currentTime = 0;
+        UFOMoveSound.play();
         ufo.moveTimer = 1500;
         ufo.currentTile += 1;
 
@@ -110,6 +158,7 @@ module.exports = function Game(ctx, sprites) {
 
       if (ufo.spawnTimer <= 0) {
         ufo.isActive = true;
+        UFOSpawnSound.play();
       }
     }
   }
@@ -232,6 +281,7 @@ module.exports = function Game(ctx, sprites) {
     var y = e.pageY;
     // calc cell collision
     if (gameState === STATES.MAIN) {
+      BallHitSound.play();
       if (x > gridX && x < CELL_SIZE * 4 + gridX && y > gridY && y < CELL_SIZE * 4 + gridY) {
         var col = Math.floor((x - gridX) / CELL_SIZE);
         var row = Math.floor((y - gridY) / CELL_SIZE);
@@ -242,10 +292,14 @@ module.exports = function Game(ctx, sprites) {
           ufo.state = 'death';
           ufo.frame = 0;
           ufo.frameTime = 0;
+          ufo.deathSound.currentTime = 0;
+          ufo.deathSound.play();
         } else if (entity && entity.state === 'idle') {
           entity.state = 'death';
           entity.frame = 0;
           entity.frameTime = 0;
+          entity.deathSound.currentTime = 0;
+          entity.deathSound.play();
         }
       }
     } else if (gameState === STATES.START) {

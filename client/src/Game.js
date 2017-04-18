@@ -3,6 +3,7 @@ Soundtrack.loop = true;
 var Soundtrack2 = new Audio(__dirname + '/../assets/Sounds/LoopingMusic2.wav');
 Soundtrack2.loop = true;
 Soundtrack2.volume = 0.3;
+var endMusic = new Audio(__dirname + '/../assets/Sounds/EndMusic.wav');
 var BallHitSound = new Audio(__dirname + '/../assets/Sounds/BallHit.wav');
 var Alien1DeathSound = new Audio(__dirname + '/../assets/Sounds/Brixplosion.wav');
 var Alien2DeathSound = new Audio(__dirname + '/../assets/Sounds/Alienplosion.wav');
@@ -108,6 +109,8 @@ module.exports = function Game(ctx, sprites) {
     document.querySelector('#start_ui').className = 'is-visible';
     document.querySelector('#game_ui').className = 'is-hidden';
     document.querySelector('#game_over_ui').className = 'is-hidden';
+    Soundtrack.pause();
+    Soundtrack2.pause();
   }
 
   function displayTime() {
@@ -268,6 +271,9 @@ module.exports = function Game(ctx, sprites) {
 
       if (countDown <= 0) {
         gameState = STATES.END;
+        Soundtrack.pause();
+        Soundtrack2.pause();
+        endMusic.play();
         document.querySelector('#game_ui').className = 'is-hidden';
         document.querySelector('#game_over_ui').className = 'is-visible';
       }

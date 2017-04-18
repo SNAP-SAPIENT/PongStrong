@@ -98,6 +98,49 @@ module.exports = function LoadSprites() {
             },
           ],
         },
+        spawn: {
+          img: document.querySelector('#UFO_sheet'),
+          rate: 150,
+          frames: [
+            {
+              x: 224,
+              y: 224,
+            },
+            {
+              x: 448,
+              y: 224,
+            },
+            {
+              x: 672,
+              y: 224,
+            },
+            {
+              x: 896,
+              y: 224,
+            },
+            {
+              x: 1120,
+              y: 224,
+            },
+
+            {
+              x: 0,
+              y: 448,
+            },
+            {
+              x: 224,
+              y: 448,
+            },
+            {
+              x: 448,
+              y: 448,
+            },
+            {
+              x: 672,
+              y: 448,
+            },
+          ],
+        },
         death: {
           img: document.querySelector('#UFO_sheet'),
           rate: 150,
@@ -490,7 +533,7 @@ module.exports = function LoadSprites() {
               x: 1568,
               y: 0,
             },
-            
+
             {
               x: 0,
               y: 224,

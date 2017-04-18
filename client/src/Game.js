@@ -48,7 +48,8 @@ function createUFO() {
     currentTile: 0,
     isActive: false,
     moveTimer: 1500,
-    spawnTimer: 3000,
+    spawnTimer: 6000,
+    spawnFrame: 9,
     deathSound: UFODeathSound,
   };
 }
@@ -62,7 +63,7 @@ module.exports = function Game(ctx, sprites) {
   var gameState = STATES.START;
   var previousTime = Date.now();
   var CELL_SIZE = 256;
-  var countDown = 60 * 1000 * 3; // 3 min
+  var countDown = 60 * 1000 * 2; // 3 min
   var score = 0;
   var gridX = window.innerWidth / 2 - CELL_SIZE * 4 / 2;
   var gridY = 128;
@@ -99,7 +100,7 @@ module.exports = function Game(ctx, sprites) {
       }
     });
     score = 0;
-    countDown = 60 * 1000 * 3;
+    countDown = 60 * 1000 * 2;
     gameOverTimer = 5000;
     scoreScreenTimer = 20000;
     gameState = STATES.START;
@@ -143,11 +144,17 @@ module.exports = function Game(ctx, sprites) {
     if (ufo.isActive) {
       ufo.moveTimer -= dt;
 
-      if (ufo.moveTimer <= 0 && ufo.state !== 'death') {
+      if (ufo.moveTimer <= 0 && ufo.state === 'idle') {
         UFOMoveSound.currentTime = 0;
         UFOMoveSound.play();
         ufo.moveTimer = 1500;
         ufo.currentTile += 1;
+
+        if(grid[ufo.currentTile] && grid[ufo.currentTile].entity === null && Math.random() > 0.7) {
+          ufo.state = 'spawn';
+          UFOSpawnSound.play();
+          grid[ufo.currentTile].entity = createBasicBrick();
+        }
 
         if (ufo.currentTile >= grid.length) {
           ufo = createUFO();
@@ -158,7 +165,6 @@ module.exports = function Game(ctx, sprites) {
 
       if (ufo.spawnTimer <= 0) {
         ufo.isActive = true;
-        UFOSpawnSound.play();
       }
     }
   }
@@ -177,6 +183,11 @@ module.exports = function Game(ctx, sprites) {
         entity.frameTime = 0;
         var newFrame = entity.frame + 1;
         entity.frame = newFrame;
+
+        if (entity.type === 'UFO' && entity.spawnFrame === newFrame) {
+          entity.state = 'idle';
+          entity.frame = 0;
+        }
 
         if (entity.state === 'death' && newFrame === entity.deathFrame) {
           score += entity.points;

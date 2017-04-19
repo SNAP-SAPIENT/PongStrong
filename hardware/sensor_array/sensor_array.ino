@@ -1,6 +1,6 @@
 const int inputPins[] = { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
 const int cells[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
-const int inputCount = 3;
+const int inputCount = 12;
 int time = 0;
 
 // these variables will change:
@@ -41,7 +41,7 @@ void printSensorTimes() {
   for (int i = 0; i < inputCount; i++) {
     Serial.print(sensorTimes[i]);
     if (i+1 < inputCount) {
-      Serial.print(","); 
+      Serial.print(",");
     }
   }
   Serial.println("");

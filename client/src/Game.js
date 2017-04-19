@@ -5,7 +5,7 @@ Soundtrack2.loop = true;
 Soundtrack2.volume = 0.3;
 var endMusic = new Audio(__dirname + '/../assets/Sounds/EndMusic.wav');
 var BallHitSound = new Audio(__dirname + '/../assets/Sounds/BallHit.wav');
-BallHitSound.volume = 1;
+
 var Alien1DeathSound = new Audio(__dirname + '/../assets/Sounds/Brixplosion.wav');
 var Alien2DeathSound = new Audio(__dirname + '/../assets/Sounds/Alienplosion.wav');
 var UFODeathSound = new Audio(__dirname + '/../assets/Sounds/Saucerxplosion.wav');

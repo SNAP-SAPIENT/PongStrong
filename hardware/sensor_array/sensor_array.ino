@@ -1,11 +1,12 @@
-const int inputPins[] = { 9, 10, 11 };
+const int inputPins[] = { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
+const int cells[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
 const int inputCount = 3;
 int time = 0;
 
 // these variables will change:
 int sensorReading = 0; // variable to store the value read from the sensor pin
-long sensorTimes[] = { 0, 0, 0, 0, 0 };
-int sensorValues[] = { 0, 0, 0, 0, 0 };
+// Longs because the micros() returns longs
+long sensorTimes[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 // Detect buffer vars
 bool isDetecting = false;
@@ -26,9 +27,6 @@ void setSensorTimes() {
   // read the sensor and store it in the variable sensorReading:
   for (int i = 0; i < inputCount; i++) {
     if (digitalRead(inputPins[i]) == HIGH && sensorTimes[i] == 0) {
-//      Serial.print(inputPins[i]);
-//      Serial.print(" : ");
-//      Serial.println(millis());
       if (isDetecting == false) {
         isDetecting = true;
         detectStart = millis();
@@ -41,13 +39,10 @@ void setSensorTimes() {
 void printSensorTimes() {
   alreadyPrinted = true;
   for (int i = 0; i < inputCount; i++) {
-//    Serial.print(inputPins[i]);
-//    Serial.print(" , ");
-//    Serial.print(sensorValues[i]);
-    // Serial.print(" , ");
     Serial.print(sensorTimes[i]);
-    Serial.print(",");
-    // Serial.print("  _  ");
+    if (i+1 < inputCount) {
+      Serial.print(","); 
+    }
   }
   Serial.println("");
 }
@@ -58,7 +53,7 @@ bool shouldReset() {
 
 void resetSensorTimes() {
   for (int i = 0; i < inputCount; i++) {
-    sensorTimes[i] = 0; 
+    sensorTimes[i] = 0;
   }
 }
 

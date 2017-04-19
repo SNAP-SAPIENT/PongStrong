@@ -5,6 +5,7 @@ Soundtrack2.loop = true;
 Soundtrack2.volume = 0.3;
 var endMusic = new Audio(__dirname + '/../assets/Sounds/EndMusic.wav');
 var BallHitSound = new Audio(__dirname + '/../assets/Sounds/BallHit.wav');
+BallHitSound.volume = 1;
 var Alien1DeathSound = new Audio(__dirname + '/../assets/Sounds/Brixplosion.wav');
 var Alien2DeathSound = new Audio(__dirname + '/../assets/Sounds/Alienplosion.wav');
 var UFODeathSound = new Audio(__dirname + '/../assets/Sounds/Saucerxplosion.wav');
@@ -57,9 +58,9 @@ function createUFO() {
 
 var STATES = { START: 'START', INTRO: 'INTRO', MAIN: 'MAIN', END: 'END', SCORES: 'SCORES' };
 
-module.exports = function Game(ctx, sprites) {
+module.exports = function Game(ctx, sprites, port) {
   Soundtrack.play();
-  Soundtrack2.play();
+  // Soundtrack2.play();
 
   var gameState = STATES.START;
   var previousTime = Date.now();
@@ -109,8 +110,8 @@ module.exports = function Game(ctx, sprites) {
     document.querySelector('#start_ui').className = 'is-visible';
     document.querySelector('#game_ui').className = 'is-hidden';
     document.querySelector('#game_over_ui').className = 'is-hidden';
-    Soundtrack.pause();
-    Soundtrack2.pause();
+    Soundtrack.play();
+    // Soundtrack2.pause();
   }
 
   function displayTime() {
@@ -147,7 +148,7 @@ module.exports = function Game(ctx, sprites) {
     if (ufo.isActive) {
       ufo.moveTimer -= dt;
 
-      if (ufo.moveTimer <= 0 && ufo.state === 'idle') {
+      if (ufo.moveTimer <= 0 && ufo.state !== 'death' && ufo.state !== 'spawn') {
         UFOMoveSound.currentTime = 0;
         UFOMoveSound.play();
         ufo.moveTimer = 1500;
@@ -187,7 +188,7 @@ module.exports = function Game(ctx, sprites) {
         var newFrame = entity.frame + 1;
         entity.frame = newFrame;
 
-        if (entity.type === 'UFO' && entity.spawnFrame === newFrame) {
+        if (entity.type === 'UFO' && entity.state !== 'death' && entity.spawnFrame === newFrame) {
           entity.state = 'idle';
           entity.frame = 0;
         }
@@ -296,6 +297,7 @@ module.exports = function Game(ctx, sprites) {
   document.querySelector('#screen').addEventListener('click', (e) => {
     var x = e.pageX;
     var y = e.pageY;
+
     // calc cell collision
     if (gameState === STATES.MAIN) {
       BallHitSound.play();
@@ -318,6 +320,39 @@ module.exports = function Game(ctx, sprites) {
           entity.deathSound.currentTime = 0;
           entity.deathSound.play();
         }
+      }
+    } else if (gameState === STATES.START) {
+      gameState = STATES.MAIN;
+      document.querySelector('#start_ui').className = 'is-hidden';
+      document.querySelector('#game_ui').className = 'is-visible';
+    }
+  });
+
+  port.on('data', function (data) {
+    // calc cell collision
+    if (gameState === STATES.MAIN) {
+      BallHitSound.play();
+
+      var cellId = data
+        .split(',')
+        .map(x => parseInt(x, 10))
+        .reduce(
+          (acc, time, i) => time < acc[0] ? [time, i] : acc,
+          [Infinity, 0]
+        )[1];
+      var entity = grid[cellId].entity;
+      if (ufo.isActive && cellId === ufo.currentTile && ufo.state !== 'death') {
+        ufo.state = 'death';
+        ufo.frame = 0;
+        ufo.frameTime = 0;
+        ufo.deathSound.currentTime = 0;
+        ufo.deathSound.play();
+      } else if (entity && entity.state === 'idle') {
+        entity.state = 'death';
+        entity.frame = 0;
+        entity.frameTime = 0;
+        entity.deathSound.currentTime = 0;
+        entity.deathSound.play();
       }
     } else if (gameState === STATES.START) {
       gameState = STATES.MAIN;

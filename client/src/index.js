@@ -12,9 +12,6 @@ window.onload = function () {
     baudRate: 115200,
     parser: SerialPort.parsers.readline('\n'),
   });
-  port.on('data', function (stuff) {
-    console.log(stuff);
-  });
 
   var sprites = SpriteLoader();
 
@@ -23,5 +20,5 @@ window.onload = function () {
   canvas.height = window.innerHeight;
   var ctx = canvas.getContext('2d');
 
-  Game(ctx, sprites)();
+  Game(ctx, sprites, port)();
 }

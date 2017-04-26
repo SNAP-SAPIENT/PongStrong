@@ -94,10 +94,20 @@
         position: absolute;
         width: 100%;
         text-align: center;
-        top: 45%;
+        top: calc(30% + 150px);
         font-family: mechanical;
         font-size: 70px;
         color: #ff00ff;
+      }
+
+      .game-over-score {
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        top: 30%;
+        font-family: mechanical;
+        font-size: 130px;
+        color: #ffffff;
       }
     </style>
 
@@ -135,6 +145,7 @@
       </div>
 
       <div id="game_over_ui" class="is-hidden">
+        <p class="game-over-score"></p>
         <p class="game-over">GAME OVER !</p>
       </div>
 

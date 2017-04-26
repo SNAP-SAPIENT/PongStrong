@@ -126,6 +126,7 @@ module.exports = function Game(ctx, sprites, port) {
 
   function displayScore() {
     var scoreDiv = document.querySelector('#score');
+    var gameOverDiv = document.querySelector('.game-over-score');
 
     // dis nasty right here
     var scoreString = '';
@@ -142,6 +143,7 @@ module.exports = function Game(ctx, sprites, port) {
     }
     scoreString += score;
     scoreDiv.innerHTML = scoreString;
+    gameOverDiv.innerHTML = 'Score: '+ scoreString;
   }
 
   function updateShip(dt) {

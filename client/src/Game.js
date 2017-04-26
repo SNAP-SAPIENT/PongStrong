@@ -334,6 +334,24 @@ module.exports = function Game(ctx, sprites, port) {
       deg += 1;
     } else if (e.key === 'ArrowDown') {
       deg -= 1;
+    } else if (e.key === 'ArrowRight') {
+      CELL_SIZE+=5;
+      gridX = window.innerWidth / 2 - CELL_SIZE * 4 / 2;
+      gridCoords = [
+        [0, 0], [CELL_SIZE, 0], [CELL_SIZE * 2, 0], [CELL_SIZE * 3, 0],
+        [0, CELL_SIZE], [CELL_SIZE, CELL_SIZE], [CELL_SIZE * 2, CELL_SIZE], [CELL_SIZE * 3, CELL_SIZE],
+        [0, CELL_SIZE * 2], [CELL_SIZE, CELL_SIZE * 2], [CELL_SIZE * 2, CELL_SIZE * 2], [CELL_SIZE * 3, CELL_SIZE * 2],
+      ];
+      resetGame();
+    } else if (e.key === 'ArrowLeft') {
+      CELL_SIZE-=5;
+      gridX = window.innerWidth / 2 - CELL_SIZE * 4 / 2;
+      gridCoords = [
+        [0, 0], [CELL_SIZE, 0], [CELL_SIZE * 2, 0], [CELL_SIZE * 3, 0],
+        [0, CELL_SIZE], [CELL_SIZE, CELL_SIZE], [CELL_SIZE * 2, CELL_SIZE], [CELL_SIZE * 3, CELL_SIZE],
+        [0, CELL_SIZE * 2], [CELL_SIZE, CELL_SIZE * 2], [CELL_SIZE * 2, CELL_SIZE * 2], [CELL_SIZE * 3, CELL_SIZE * 2],
+      ];
+      resetGame();
     }
     body.style = `transform: rotate3d(1,0,0,${deg}deg);`;
   });

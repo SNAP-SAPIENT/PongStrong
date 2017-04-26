@@ -64,7 +64,7 @@ module.exports = function Game(ctx, sprites, port) {
 
   var gameState = STATES.START;
   var previousTime = Date.now();
-  var CELL_SIZE = 256;
+  var CELL_SIZE = 306;
   var countDown = 60 * 1000 * 2; // 3 min
   var score = 0;
   var gridX = window.innerWidth / 2 - CELL_SIZE * 4 / 2;

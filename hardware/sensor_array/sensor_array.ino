@@ -60,12 +60,13 @@ void resetSensorTimes() {
 void loop(){
   setSensorTimes();
 
-  bool shouldPrint = true;
+  int sensorReadCount = 0;
   for (int i = 0; i < inputCount; i++) {
-    if (sensorTimes[i] == 0) {
-      shouldPrint = false;
+    if (sensorTimes[i] > 0) {
+      sensorReadCount++;
     }
   }
+  bool shouldPrint = (sensorReadCount > 3);
 
   if (shouldPrint && !alreadyPrinted) {
     printSensorTimes();

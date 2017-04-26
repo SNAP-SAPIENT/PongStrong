@@ -337,7 +337,7 @@ module.exports = function Game(ctx, sprites, port) {
         .split(',')
         .map(x => parseInt(x, 10))
         .reduce(
-          (acc, time, i) => time < acc[0] ? [time, i] : acc,
+          (acc, time, i) => (time != 0 && time < acc[0]) ? [time, i] : acc,
           [Infinity, 0]
         )[1];
       var entity = grid[cellId].entity;

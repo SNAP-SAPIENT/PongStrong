@@ -327,6 +327,16 @@ module.exports = function Game(ctx, sprites, port) {
       document.querySelector('#game_ui').className = 'is-visible';
     }
   });
+  const body = document.querySelector('section');
+  let deg = 0;
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowUp') {
+      deg += 1;
+    } else if (e.key === 'ArrowDown') {
+      deg -= 1;
+    }
+    body.style = `transform: rotate3d(1,0,0,${deg}deg);`;
+  });
 
   port.on('data', function (data) {
     // calc cell collision

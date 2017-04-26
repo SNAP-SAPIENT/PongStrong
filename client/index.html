@@ -14,6 +14,10 @@
         overflow-x: hidden;
       }
 
+      body {
+        background: black;
+      }
+
       @font-face {
         font-family: wide7;
         src: url(assets/fonts/wide_pixel_7/wide_pixel-7.ttf);
@@ -100,42 +104,43 @@
 
   </head>
   <body>
-    <div id="image_assets">
-      <img id="UFO_idle_asset" class="is-hidden" src="./assets/UFO_idle.png" alt="UFO">
-      <img id="UFO_death_asset" class="is-hidden" src="./assets/UFO_death.png" alt="UFO">
-      <img id="Brick_asset" class="is-hidden" src="./assets/Brick.png" alt="Brick">
-      <img id="Alien_asset" class="is-hidden" src="./assets/Alien.png" alt="Alien">
-      <img id="Logo_asset" class="is-hidden" src="./assets/Logo.png" alt="Logo">
-      <img id="Arm_asset" class="is-hidden" src="./assets/ARMS.png" alt="ARM">
-      <img id="UFO_sheet" class="is-hidden" src="./assets/UFO_Spritesheet.png" alt="UFO">
-      <img id="Alien1_sheet" class="is-hidden" src="./assets/Alien_Spritesheet.png" alt="Brick">
-      <img id="Alien2_sheet" class="is-hidden" src="./assets/Alien02_Spritesheet.png" alt="Alien">
-    </div>
-
-    <div id="start_ui" class="is-visible">
-      <span class="copyright-text">COPYRIGHT 2017 - SAPIENTRAZORFISH</span>
-      <span class="start-screen-sub">TEST YOUR PONG STRENGTH</span>
-    </div>
-
-    <div id="game_ui" class="is-hidden">
-      <img class="in-game-logo" src="./assets/PongStrong.jpg">
-      <div class="labels-row">
-        <span class="in-game-label">TIME:</span>
-        <span class="in-game-label">SCORE:</span>
+    <section>
+      <div id="image_assets">
+        <img id="UFO_idle_asset" class="is-hidden" src="./assets/UFO_idle.png" alt="UFO">
+        <img id="UFO_death_asset" class="is-hidden" src="./assets/UFO_death.png" alt="UFO">
+        <img id="Brick_asset" class="is-hidden" src="./assets/Brick.png" alt="Brick">
+        <img id="Alien_asset" class="is-hidden" src="./assets/Alien.png" alt="Alien">
+        <img id="Logo_asset" class="is-hidden" src="./assets/Logo.png" alt="Logo">
+        <img id="Arm_asset" class="is-hidden" src="./assets/ARMS.png" alt="ARM">
+        <img id="UFO_sheet" class="is-hidden" src="./assets/UFO_Spritesheet.png" alt="UFO">
+        <img id="Alien1_sheet" class="is-hidden" src="./assets/Alien_Spritesheet.png" alt="Brick">
+        <img id="Alien2_sheet" class="is-hidden" src="./assets/Alien02_Spritesheet.png" alt="Alien">
       </div>
-      <div class="numbers-row">
-        <span id="time" class="in-game-number">0:00</span>
-        <span class="in-game-number"><span id="score">0000</span> <span class="in-game-label">pts</span></span>
+
+      <div id="start_ui" class="is-visible">
+        <span class="copyright-text">COPYRIGHT 2017 - SAPIENTRAZORFISH</span>
+        <span class="start-screen-sub">TEST YOUR PONG STRENGTH</span>
       </div>
-    </div>
 
-    <div id="game_over_ui" class="is-hidden">
-      <p class="game-over">GAME OVER !</p>
-    </div>
+      <div id="game_ui" class="is-hidden">
+        <img class="in-game-logo" src="./assets/PongStrong.jpg">
+        <div class="labels-row">
+          <span class="in-game-label">TIME:</span>
+          <span class="in-game-label">SCORE:</span>
+        </div>
+        <div class="numbers-row">
+          <span id="time" class="in-game-number">0:00</span>
+          <span class="in-game-number"><span id="score">0000</span> <span class="in-game-label">pts</span></span>
+        </div>
+      </div>
 
-    <div>
-      <canvas id="screen"></canvas>
-    </div>
+      <div id="game_over_ui" class="is-hidden">
+        <p class="game-over">GAME OVER !</p>
+      </div>
 
+      <div>
+        <canvas id="screen"></canvas>
+      </div>
+    </section>
   </body>
 </html>
